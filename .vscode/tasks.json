@@ -1,0 +1,265 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "npm: lint",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "npm: lint (suffix inputs)",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "npm: lint (post UnitInput tweak)",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "npm: lint (enter behavior)",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: rename create to assembly creator",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: after assembly creator baseline backup",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: assembly creator always-visible buttons/specs",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: simplify assembly creator to categories",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: inline editable specs on assembly creator",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: add toe kicks panel",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: buildmodal toe kicks + remove page toe kicks",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: add build result wiring",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: compact specs grid on create",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: narrow W/H/D inputs",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: step 5 modal with status summary",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: status in modal only",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: remove status panel from modal",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: create page build status summary",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: compact right pane styling",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "lint: default attached toe kick step 5",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"npm run lint"
+			],
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
+		}
+	]
+}

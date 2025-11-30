@@ -1,0 +1,14 @@
+{
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "react", "react-hooks"],
+  "rules": {
+    "max-lines": ["error", { "max": 500, "skipComments": true, "skipBlankLines": true }],
+    "max-lines-per-function": ["warn", { "max": 120, "skipComments": true, "skipBlankLines": true }],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  },
+  "settings": { "react": { "version": "detect" } }
+}
+
+

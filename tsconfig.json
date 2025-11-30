@@ -1,0 +1,29 @@
+{
+  "extends": "./tsconfig.node.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    // --- alias setup ---
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": [
+    // Exclude legacy/backup source files from typecheck
+    "src/**/*.old.tsx",
+    "src/**/*.old.ts",
+    "src/**/*.backup.tsx",
+    "src/**/*.backup.ts"
+  ]
+}
+

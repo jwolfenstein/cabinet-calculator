@@ -1,0 +1,344 @@
+import React from 'react';
+import { BuildResult } from './BuildModal';
+import { useUnits, inToMm, formatMm0_5 } from '../../../store/units';
+import { toFraction } from '../../../utils/fractions';
+
+interface BuildStatusItemsProps {
+    cabinetStyle: string;
+    buildResult: BuildResult | null;
+    getCurrentSpecs: () => { width: number; height: number; depth: number; doorStyle: string; finish: string; } | null;
+    setBuildResult: React.Dispatch<React.SetStateAction<BuildResult | null>>;
+}
+
+interface ItemProps {
+    label: string;
+    value?: string;
+    ok: boolean;
+}
+
+const Item = ({ label, value, ok }: ItemProps) => (
+    <div className="build-status-item">
+        <span className="label">{label}</span>
+        <span className={ok ? 'status-ok' : 'status-bad'}>
+            {value || (ok ? 'Complete' : 'Incomplete')}
+        </span>
+    </div>
+);
+
+export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpecs, setBuildResult }: BuildStatusItemsProps) {
+    const statusItems: JSX.Element[] = [];
+    const renderBr: BuildResult = br ?? {
+        units: 'in',
+        materials: { case: { ends: '', bottom: '', tops: '', stretchers: '', fixedShelf: '', adjShelf: '', backs: '', nailers: '', toeKick: '', toeSkirt: '' }, hardware: { drawerGuides: '', hinges: '', hingePlates: '' } },
+        faceFramePositioning: { leftStile: { mode: 'flush-exterior' as any }, rightStile: { mode: 'flush-exterior' as any }, bottomRail: { mode: 'flush-top' as any } },
+        backConstruction: { id: '', name: '' },
+        dados: { typeId: 'no-dados' },
+        toeKick: { attached: null }
+    };
+    // Omit cabinet style and dimensions on Cabinet Defaults tab
+    // Build Process Defaults (editable controls)
+
+        // Face Frame Positioning (only for face-frame)
+        if (cabinetStyle === 'face-frame') {
+            const ff = renderBr.faceFramePositioning ?? { leftStile: { mode: 'flush-exterior' as any }, rightStile: { mode: 'flush-exterior' as any }, bottomRail: { mode: 'flush-top' as any, offsetIn: 0.25 } };
+            statusItems.push(
+                <div className="build-status-item" key="ff-left">
+                    <span className="label">Left stile</span>
+                    <span>
+                        <select className="input" value={ff.leftStile.mode} title="Left stile mode"
+                            onChange={(e)=> setBuildResult(prev => ({
+                                    ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                faceFramePositioning: {
+                                        ...(prev?.faceFramePositioning ?? ff),
+                                    leftStile: { mode: e.target.value as any, offsetIn: e.target.value==='offset' ? (prev?.faceFramePositioning?.leftStile.offsetIn ?? 0.75) : undefined }
+                                }
+                            }))}
+                        >
+                            <option value="flush-exterior">flush exterior</option>
+                            <option value="flush-interior">flush interior</option>
+                            <option value="offset">offset</option>
+                        </select>
+                            {( ff.leftStile.mode==='offset') && (
+                            <input className="input input-narrow" type="number" step="0.01" title="Left stile offset (in)" value={renderBr.faceFramePositioning?.leftStile.offsetIn ?? 0.75}
+                                onChange={(e)=> setBuildResult(prev => ({
+                                        ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                    faceFramePositioning: {
+                                            ...(prev?.faceFramePositioning ?? ff),
+                                        leftStile: { ...(prev?.faceFramePositioning?.leftStile ?? { mode: 'offset' }), offsetIn: Number(e.target.value) }
+                                    }
+                                }))}
+                            />
+                        )}
+                    </span>
+                </div>
+            );
+            statusItems.push(
+                <div className="build-status-item" key="ff-right">
+                    <span className="label">Right stile</span>
+                    <span>
+                        <select className="input" value={ff.rightStile.mode} title="Right stile mode"
+                            onChange={(e)=> setBuildResult(prev => ({
+                                    ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                faceFramePositioning: {
+                                    ...(prev?.faceFramePositioning ?? ff),
+                                    rightStile: { mode: e.target.value as any, offsetIn: e.target.value==='offset' ? (prev?.faceFramePositioning?.rightStile.offsetIn ?? 0.75) : undefined }
+                                }
+                            }))}
+                        >
+                            <option value="flush-exterior">flush exterior</option>
+                            <option value="flush-interior">flush interior</option>
+                            <option value="offset">offset</option>
+                        </select>
+                            {( ff.rightStile.mode==='offset') && (
+                            <input className="input input-narrow" type="number" step="0.01" title="Right stile offset (in)" value={renderBr.faceFramePositioning?.rightStile.offsetIn ?? 0.75}
+                                onChange={(e)=> setBuildResult(prev => ({
+                                        ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                    faceFramePositioning: {
+                                            ...(prev?.faceFramePositioning ?? ff),
+                                        rightStile: { ...(prev?.faceFramePositioning?.rightStile ?? { mode: 'offset' }), offsetIn: Number(e.target.value) }
+                                    }
+                                }))}
+                            />
+                        )}
+                    </span>
+                </div>
+            );
+            statusItems.push(
+                <div className="build-status-item" key="ff-bottom">
+                    <span className="label">Bottom rail</span>
+                    <span>
+                        <select className="input" value={ff.bottomRail.mode} title="Bottom rail mode"
+                            onChange={(e)=> setBuildResult(prev => ({
+                                    ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                faceFramePositioning: {
+                                    ...(prev?.faceFramePositioning ?? ff),
+                                    bottomRail: { mode: e.target.value as any, offsetIn: e.target.value==='offset' ? (prev?.faceFramePositioning?.bottomRail.offsetIn ?? 0.25) : undefined }
+                                }
+                            }))}
+                        >
+                            <option value="flush-top">flush top</option>
+                            <option value="flush-bottom">flush bottom</option>
+                            <option value="offset">offset</option>
+                        </select>
+                            {( ff.bottomRail.mode==='offset') && (
+                            <input className="input input-narrow" type="number" step="0.01" title="Bottom rail offset (in)" value={renderBr.faceFramePositioning?.bottomRail.offsetIn ?? 0.25}
+                                    onChange={(e)=> setBuildResult(prev => {
+                                        const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult;
+                                        const ffBase = base.faceFramePositioning ?? ff;
+                                        return {
+                                            ...base,
+                                            faceFramePositioning: {
+                                                leftStile: ffBase.leftStile,
+                                                rightStile: ffBase.rightStile,
+                                                bottomRail: { ...(ffBase.bottomRail ?? { mode: 'offset' as any }), offsetIn: Number(e.target.value) }
+                                            }
+                                        };
+                                    })}
+                            />
+                        )}
+                    </span>
+                </div>
+            );
+        }
+
+        // Back Construction
+        statusItems.push(
+            <div className="build-status-item" key="back-construction">
+                <span className="label">Back construction</span>
+                <span>
+                        <select className="input" value={renderBr.backConstruction?.id ?? ''} title="Back construction"
+                        onChange={(e)=> setBuildResult(prev => ({
+                                ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                            backConstruction: {
+                                id: e.target.value,
+                                name: e.target.value,
+                                    dadoDepthIn: (e.target.value==='dado-thick-back' || e.target.value==='inset-nailer-dado-back') ? (prev?.backConstruction?.dadoDepthIn ?? 0.25) : undefined
+                            }
+                        }))}
+                    >
+                        <option value="">Select back...</option>
+                        <option value="no-back">No back</option>
+                        <option value="full-back">Full back</option>
+                        <option value="dado-thick-back">Dado thick back</option>
+                        <option value="inset-nailer-dado-back">Inset nailer dado back</option>
+                    </select>
+                            {(renderBr.backConstruction?.id==='dado-thick-back' || renderBr.backConstruction?.id==='inset-nailer-dado-back') && (
+                                <input className="input input-narrow" type="number" step="0.01" title="Back dado depth (in)" value={renderBr.backConstruction?.dadoDepthIn ?? 0.25}
+                            onChange={(e)=> setBuildResult(prev => ({
+                                    ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                    backConstruction: { ...(prev?.backConstruction ?? { id: 'dado-thick-back', name: 'Dado thick back' }), dadoDepthIn: Number(e.target.value) }
+                            }))}
+                        />
+                    )}
+                </span>
+            </div>
+            );
+
+        // Dados
+        const d = renderBr.dados ?? { typeId: 'no-dados' as const };
+        statusItems.push(
+            <div className="build-status-item" key="dados">
+                <span className="label">Dados</span>
+                <span>
+                    <select className="input" value={d.typeId} title="Dados type"
+                        onChange={(e)=> setBuildResult(prev => ({
+                                ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                            dados: { ...(prev?.dados ?? {}), typeId: e.target.value as any }
+                        }))}
+                    >
+                        <option value="no-dados">No dados</option>
+                        <option value="full-thickness-dados">Full-thickness dados</option>
+                        <option value="step-dados">Step dados</option>
+                    </select>
+                        {(renderBr.dados?.typeId==='full-thickness-dados' || renderBr.dados?.typeId==='step-dados') && (
+                        <>
+                                <input className="input input-narrow" type="number" step="0.01" placeholder="Depth (in)" title="Dados depth (in)" value={renderBr.dados?.depthIn ?? 0.25}
+                                onChange={(e)=> setBuildResult(prev => ({
+                                        ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                        dados: { ...(prev?.dados ?? { typeId: 'full-thickness-dados' }), depthIn: Number(e.target.value) }
+                                }))}
+                            />
+                                {renderBr.dados?.typeId==='step-dados' && (
+                                    <input className="input input-narrow" type="number" step="0.01" placeholder="Rebate (in)" title="Step rebate (in)" value={renderBr.dados?.stepRebateIn ?? 0.125}
+                                    onChange={(e)=> setBuildResult(prev => ({
+                                            ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                            dados: { ...(prev?.dados ?? { typeId: 'step-dados' }), stepRebateIn: Number(e.target.value) }
+                                    }))}
+                                />
+                            )}
+                                <label className="ml-2">
+                                    <input type="checkbox" checked={!!renderBr.dados?.blind?.enabled} title="Blind enabled"
+                                    onChange={(e)=> setBuildResult(prev => {
+                                        const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
+                                        return {
+                                            ...base,
+                                            dados: {
+                                                ...(base.dados ?? { typeId: 'full-thickness-dados' }),
+                                                blind: { ...(base.dados?.blind ?? { enabled: false, frontsOnly: false }), enabled: e.target.checked, frontsOnly: base.dados?.blind?.frontsOnly ?? false }
+                                            }
+                                        };
+                                    })}
+                                /> Blind
+                            </label>
+                                {!!renderBr.dados?.blind?.enabled && (
+                                <>
+                                        <input className="input input-narrow" type="number" step="0.01" placeholder="Blind offset (in)" title="Blind offset (in)" value={renderBr.dados?.blind?.offsetIn ?? 0.25}
+                                        onChange={(e)=> setBuildResult(prev => {
+                                            const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
+                                            return {
+                                                ...base,
+                                                dados: {
+                                                    ...(base.dados ?? { typeId: 'full-thickness-dados' }),
+                                                    blind: { ...(base.dados?.blind ?? { enabled: true, frontsOnly: false }), offsetIn: Number(e.target.value), enabled: true, frontsOnly: base.dados?.blind?.frontsOnly ?? false }
+                                                }
+                                            };
+                                        })}
+                                    />
+                                        <label className="ml-2">
+                                            <input type="checkbox" checked={!!renderBr.dados?.blind?.frontsOnly} title="Blind fronts only"
+                                            onChange={(e)=> setBuildResult(prev => {
+                                                const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
+                                                return {
+                                                    ...base,
+                                                    dados: { ...(base.dados ?? { typeId: 'full-thickness-dados' }), blind: { ...(base.dados?.blind ?? { enabled: true }), frontsOnly: e.target.checked, enabled: true } }
+                                                };
+                                            })}
+                                        /> Fronts only
+                                    </label>
+                                </>
+                            )}
+                        </>
+                    )}
+                </span>
+            </div>
+            );
+
+        // Toe Kick
+        const t = renderBr.toeKick ?? { attached: null };
+        statusItems.push(
+            <div className="build-status-item" key="toe-kick">
+                <span className="label">Toe kick</span>
+                <span>
+                    <select className="input" value={t.attached==null ? '' : (t.attached ? 'yes' : 'no')} title="Toe kick attached"
+                        onChange={(e)=> setBuildResult(prev => ({
+                                ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                            toeKick: { ...(prev?.toeKick ?? {}), attached: e.target.value==='' ? null : (e.target.value==='yes') }
+                        }))}
+                    >
+                        <option value="">Select...</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                        {(renderBr.toeKick?.attached!=null) && (
+                        <>
+                                <input className="input input-narrow" type="number" step="0.01" placeholder="Height (in)" title="Toe kick height (in)" value={renderBr.toeKick?.heightIn ?? 3.5}
+                                onChange={(e)=> setBuildResult(prev => ({
+                                        ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                        toeKick: { ...(prev?.toeKick ?? { attached: true }), heightIn: Number(e.target.value) }
+                                }))}
+                            />
+                                <input className="input input-narrow" type="number" step="0.01" placeholder="Depth (in)" title="Toe kick depth (in)" value={renderBr.toeKick?.depthIn ?? 3}
+                                onChange={(e)=> setBuildResult(prev => ({
+                                        ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                        toeKick: { ...(prev?.toeKick ?? { attached: true }), depthIn: Number(e.target.value) }
+                                }))}
+                            />
+                                {(renderBr.toeKick?.attached===false) && (
+                                <>
+                                        <input className="input input-narrow" type="number" step="0.01" placeholder="Left setback (in)" title="Left setback (in)" value={renderBr.toeKick?.leftSetbackIn ?? 0}
+                                        onChange={(e)=> setBuildResult(prev => ({
+                                                ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                                toeKick: { ...(prev?.toeKick ?? { attached: false }), leftSetbackIn: Number(e.target.value) }
+                                        }))}
+                                    />
+                                        <input className="input input-narrow" type="number" step="0.01" placeholder="Right setback (in)" title="Right setback (in)" value={renderBr.toeKick?.rightSetbackIn ?? 0}
+                                        onChange={(e)=> setBuildResult(prev => ({
+                                                ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                                toeKick: { ...(prev?.toeKick ?? { attached: false }), rightSetbackIn: Number(e.target.value) }
+                                        }))}
+                                    />
+                                </>
+                            )}
+                        </>
+                    )}
+                </span>
+            </div>
+                );
+        // Cabinet Materials summary (after build process controls)
+        const caseMat = br?.materials?.case;
+        const hardware = br?.materials?.hardware;
+        statusItems.push(
+            <div className="build-status-item" key="cabinet-materials">
+                <span className="label">Cabinet materials</span>
+                <span>
+                    {caseMat ? (
+                        <>
+                            {caseMat.ends ? `Ends: ${caseMat.ends}` : ''}
+                            {caseMat.bottom ? ` • Bottom: ${caseMat.bottom}` : ''}
+                            {caseMat.tops ? ` • Tops: ${caseMat.tops}` : ''}
+                            {caseMat.backs ? ` • Backs: ${caseMat.backs}` : ''}
+                        </>
+                    ) : '—'}
+                </span>
+            </div>
+        );
+        statusItems.push(
+            <div className="build-status-item" key="hardware-defaults">
+                <span className="label">Hardware defaults</span>
+                <span>
+                    {hardware ? (
+                        <>
+                            {hardware.hinges ? `Hinges: ${hardware.hinges}` : ''}
+                            {hardware.hingePlates ? ` • Plates: ${hardware.hingePlates}` : ''}
+                            {hardware.drawerGuides ? ` • Guides: ${hardware.drawerGuides}` : ''}
+                        </>
+                    ) : '—'}
+                </span>
+            </div>
+        );
+    return (
+        <div>
+            {statusItems}
+        </div>
+    );
+}

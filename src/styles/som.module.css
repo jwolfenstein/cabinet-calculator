@@ -1,0 +1,160 @@
+/* Use global CSS variables from globals.css instead of local ones */
+
+* { box-sizing: border-box; }
+
+.wrap {
+  color: var(--text-primary);
+  padding: var(--space-lg);
+}
+
+.topnav {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+.navbtn {
+  padding: var(--space-sm) var(--space-md);
+  background: var(--button-secondary-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.navbtn:hover {
+  background: var(--button-secondary-hover);
+}
+.navbtnActive {
+  background: var(--accent-som);
+  color: var(--text-inverse);
+  border-color: var(--accent-som);
+}
+
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+}
+
+/* Header bar */
+.headerBar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: var(--space-md);
+}
+.headerLeft, .headerRight { display: flex; gap: var(--space-sm); }
+
+.btn {
+  height: 32px;
+  padding: 0 var(--space-md);
+  background: var(--button-secondary-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn:hover { background: var(--button-secondary-hover); }
+.btnGreen { background: var(--status-success); border-color: var(--status-success); color: var(--text-inverse); }
+.btnYellow { background: var(--status-warning); border-color: var(--status-warning); color: var(--text-inverse); font-weight: 700; }
+.btnRed { background: var(--status-error); border-color: var(--status-error); color: var(--text-inverse); font-weight: 700; }
+
+/* Filters */
+.filters {
+  display: flex; gap: var(--space-md); align-items: center; flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.chips { display: flex; gap: var(--space-sm); }
+.chip {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
+  padding: var(--space-xs) 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.chipActive { background: var(--accent-som); border-color: var(--accent-som); color: var(--text-inverse); }
+
+.filterItem { display: flex; align-items: center; gap: var(--space-xs); }
+.select, .input, .textarea {
+  background: var(--bg-quaternary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xs) var(--space-sm);
+  height: 32px; /* tighter height as requested */
+  transition: border-color 0.15s ease;
+}
+.select:focus, .input:focus, .textarea:focus {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+  border-color: var(--focus-ring);
+}
+.textarea { min-height: 64px; height: auto; resize: vertical; }
+.tableWrap { overflow: auto; border: 1px solid var(--border-primary); border-radius: var(--radius-lg); }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;       /* <-- keeps header & cells aligned */
+}
+
+
+/* In/MM pair */
+.inMmPair { display: inline-flex; align-items: baseline; gap: 10px; }
+.inVal { font-variant-numeric: tabular-nums; color: var(--text-primary); }
+.mmVal { font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.sep { color: var(--text-muted); }
+
+/* Modal */
+.modalBg {
+  position: fixed; inset: 0; background: rgba(11, 15, 20, 0.8);
+  display: flex; align-items: center; justify-content: center; z-index: var(--z-modal);
+  backdrop-filter: blur(4px);
+}
+.modal {
+  width: min(980px, 92vw);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-xl);
+}
+.modalTitle { font-weight: 700; margin-bottom: var(--space-sm); color: var(--text-primary); }
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.label { display: flex; flex-direction: column; gap: var(--space-xs); font-size: 13px; color: var(--text-secondary); }
+.span2 { grid-column: span 2; }
+.full { grid-column: 1 / -1; }
+
+/* Table cells in hardware view can wrap slightly */
+.td { max-width: 360px; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); }
+
+/* Grid-based list to lock header/body columns */
+.gridTable { border: 1px solid var(--border-primary); border-radius: var(--radius-lg); overflow: hidden; }
+.gridHeader {
+  display: grid;
+  align-items: center;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-primary);
+  padding: var(--space-sm) 10px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.gridBody { max-height: 60vh; overflow: auto; }
+.gridRow {
+  display: grid;
+  align-items: center;
+  padding: var(--space-sm) 10px;
+  border-bottom: 1px solid var(--border-muted);
+  color: var(--text-primary);
+  transition: background 0.15s ease;
+}
+.gridRow:hover { background: var(--bg-tertiary); }
+.cell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
