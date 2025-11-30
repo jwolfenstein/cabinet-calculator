@@ -178,6 +178,14 @@ export default function CreateCabinets() {
   
   
   const [buildResult, setBuildResult] = useState<BuildResult | null>(null);
+    // Hydrate previously saved build defaults per style (frameless/face-frame)
+    useEffect(() => {
+      if (cabinetStyle !== 'frameless' && cabinetStyle !== 'face-frame') return;
+      try {
+        const saved = localStorage.getItem(`cc.defaults.buildResult.${cabinetStyle}.v1`);
+        if (saved) setBuildResult(JSON.parse(saved));
+      } catch {}
+    }, [cabinetStyle]);
   const [customSpecs, setCustomSpecs] = useState<{
     name?: string;
     width?: number;
@@ -1173,6 +1181,11 @@ export default function CreateCabinets() {
             units={units}
             onComplete={(res) => { 
               setBuildResult(res); 
+              try {
+                if (cabinetStyle === 'frameless' || cabinetStyle === 'face-frame') {
+                  localStorage.setItem(`cc.defaults.buildResult.${cabinetStyle}.v1`, JSON.stringify(res));
+                }
+              } catch {}
               if (res.specs) {
                 setCustomSpecs(prev => ({ ...prev, width: res.specs!.width, height: res.specs!.height, depth: res.specs!.depth }));
               }

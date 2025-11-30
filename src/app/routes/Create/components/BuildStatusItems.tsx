@@ -26,6 +26,7 @@ const Item = ({ label, value, ok }: ItemProps) => (
 );
 
 export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpecs, setBuildResult }: BuildStatusItemsProps) {
+    const { units } = useUnits();
     const statusItems: JSX.Element[] = [];
     const renderBr: BuildResult = br ?? {
         units: 'in',
@@ -35,6 +36,28 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
         dados: { typeId: 'no-dados' },
         toeKick: { attached: null }
     };
+    // Initialize defaults for face-frame when selected
+    React.useEffect(() => {
+        if (cabinetStyle !== 'face-frame') return;
+        if (!br) {
+            setBuildResult({
+                units,
+                materials: { case: { ends: '', bottom: '', tops: '', stretchers: '', fixedShelf: '', adjShelf: '', backs: '', nailers: '', toeKick: '', toeSkirt: '' }, hardware: { drawerGuides: '', hinges: '', hingePlates: '' } },
+                faceFramePositioning: { leftStile: { mode: 'flush-exterior' as any }, rightStile: { mode: 'flush-exterior' as any }, bottomRail: { mode: 'flush-top' as any, offsetIn: 0.25 } },
+                backConstruction: { id: '', name: '' },
+                dados: { typeId: 'no-dados' },
+                toeKick: { attached: null }
+            });
+            return;
+        }
+        if (!br.faceFramePositioning) {
+            setBuildResult(prev => (prev ? {
+                ...prev,
+                faceFramePositioning: { leftStile: { mode: 'flush-exterior' as any }, rightStile: { mode: 'flush-exterior' as any }, bottomRail: { mode: 'flush-top' as any, offsetIn: 0.25 } }
+            } : prev));
+        }
+    }, [cabinetStyle, br, units, setBuildResult]);
+
     // Omit cabinet style and dimensions on Cabinet Defaults tab
     // Build Process Defaults (editable controls)
 
