@@ -28,43 +28,48 @@ const Item = ({ label, value, ok }: ItemProps) => (
 export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpecs, setBuildResult }: BuildStatusItemsProps) {
     const { units } = useUnits();
     const statusItems: JSX.Element[] = [];
+    // Always prepopulate defaults for all styles
     const renderBr: BuildResult = br ?? {
-        units: 'in',
+        units: units,
         materials: { case: { ends: '', bottom: '', tops: '', stretchers: '', fixedShelf: '', adjShelf: '', backs: '', nailers: '', toeKick: '', toeSkirt: '' }, hardware: { drawerGuides: '', hinges: '', hingePlates: '' } },
-        faceFramePositioning: { leftStile: { mode: 'flush-exterior' as any }, rightStile: { mode: 'flush-exterior' as any }, bottomRail: { mode: 'flush-top' as any } },
-        backConstruction: { id: '', name: '' },
+        faceFramePositioning: cabinetStyle === 'face-frame'
+            ? { leftStile: { mode: 'flush-exterior' as any }, rightStile: { mode: 'flush-exterior' as any }, bottomRail: { mode: 'flush-top' as any, offsetIn: 0.25 } }
+            : undefined,
+        backConstruction: { id: 'full-back', name: 'Full back' },
         dados: { typeId: 'no-dados' },
-        toeKick: { attached: null }
+        toeKick: { attached: true, heightIn: 3.5, depthIn: 3 }
     };
-    // Initialize defaults for face-frame when selected
+    // Ensure all defaults are hydrated if missing
     React.useEffect(() => {
-        if (cabinetStyle !== 'face-frame') return;
-        if (!br) {
-            setBuildResult({
-                units,
-                materials: { case: { ends: '', bottom: '', tops: '', stretchers: '', fixedShelf: '', adjShelf: '', backs: '', nailers: '', toeKick: '', toeSkirt: '' }, hardware: { drawerGuides: '', hinges: '', hingePlates: '' } },
-                faceFramePositioning: { leftStile: { mode: 'flush-exterior' as any }, rightStile: { mode: 'flush-exterior' as any }, bottomRail: { mode: 'flush-top' as any, offsetIn: 0.25 } },
-                backConstruction: { id: '', name: '' },
-                dados: { typeId: 'no-dados' },
-                toeKick: { attached: null }
-            });
-            return;
-        }
-        if (!br.faceFramePositioning) {
-            setBuildResult(prev => (prev ? {
-                ...prev,
-                faceFramePositioning: { leftStile: { mode: 'flush-exterior' as any }, rightStile: { mode: 'flush-exterior' as any }, bottomRail: { mode: 'flush-top' as any, offsetIn: 0.25 } }
-            } : prev));
-        }
-    }, [cabinetStyle, br, units, setBuildResult]);
+        setBuildResult(prev => {
+            if (!prev) return renderBr;
+            const next = { ...prev } as BuildResult;
+            if (!next.units) next.units = units;
+            if (!next.materials) next.materials = { case: {}, hardware: {} } as any;
+            if (cabinetStyle === 'face-frame' && !next.faceFramePositioning) {
+                next.faceFramePositioning = { leftStile: { mode: 'flush-exterior' as any }, rightStile: { mode: 'flush-exterior' as any }, bottomRail: { mode: 'flush-top' as any, offsetIn: 0.25 } };
+            }
+            if (!next.backConstruction || !next.backConstruction.id) {
+                next.backConstruction = { id: 'full-back', name: 'Full back' } as any;
+            }
+            if (!next.dados || !next.dados.typeId) {
+                next.dados = { typeId: 'no-dados' } as any;
+            }
+            if (!next.toeKick || next.toeKick.attached == null) {
+                next.toeKick = { attached: true, heightIn: 3.5, depthIn: 3 } as any;
+            }
+            return next;
+        });
+    }, [cabinetStyle, units, setBuildResult]);
 
     // Omit cabinet style and dimensions on Cabinet Defaults tab
     // Build Process Defaults (editable controls)
 
-        // Face Frame Positioning (only for face-frame)
+        // Prepare Face Frame Positioning content to render after toe kick (face-frame only)
+        let faceFrameContent: JSX.Element[] = [];
         if (cabinetStyle === 'face-frame') {
             const ff = renderBr.faceFramePositioning ?? { leftStile: { mode: 'flush-exterior' as any }, rightStile: { mode: 'flush-exterior' as any }, bottomRail: { mode: 'flush-top' as any, offsetIn: 0.25 } };
-            statusItems.push(
+            faceFrameContent.push(
                 <div className="build-status-item" key="ff-left">
                     <span className="label">Left stile</span>
                     <span>
@@ -95,7 +100,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                     </span>
                 </div>
             );
-            statusItems.push(
+            faceFrameContent.push(
                 <div className="build-status-item" key="ff-right">
                     <span className="label">Right stile</span>
                     <span>
@@ -126,7 +131,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                     </span>
                 </div>
             );
-            statusItems.push(
+            faceFrameContent.push(
                 <div className="build-status-item" key="ff-bottom">
                     <span className="label">Bottom rail</span>
                     <span>
@@ -145,7 +150,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                         </select>
                             {( ff.bottomRail.mode==='offset') && (
                             <input className="input input-narrow" type="number" step="0.01" title="Bottom rail offset (in)" value={renderBr.faceFramePositioning?.bottomRail.offsetIn ?? 0.25}
-                                    onChange={(e)=> setBuildResult(prev => {
+                                onChange={(e)=> setBuildResult(prev => {
                                         const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult;
                                         const ffBase = base.faceFramePositioning ?? ff;
                                         return {
@@ -203,49 +208,56 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
             <div className="build-status-item" key="dados">
                 <span className="label">Dados</span>
                 <span>
-                    <select className="input" value={d.typeId} title="Dados type"
-                        onChange={(e)=> setBuildResult(prev => ({
-                                ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
-                            dados: { ...(prev?.dados ?? {}), typeId: e.target.value as any }
-                        }))}
-                    >
-                        <option value="no-dados">No dados</option>
-                        <option value="full-thickness-dados">Full-thickness dados</option>
-                        <option value="step-dados">Step dados</option>
-                    </select>
-                        {(renderBr.dados?.typeId==='full-thickness-dados' || renderBr.dados?.typeId==='step-dados') && (
+                    <label className="mr-2">Type:
+                        <select className="input ml-1" value={d.typeId} title="Dados type"
+                            onChange={(e)=> setBuildResult(prev => ({
+                                    ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                dados: { ...(prev?.dados ?? {}), typeId: e.target.value as any }
+                            }))}
+                        >
+                            <option value="no-dados">No dados</option>
+                            <option value="full-thickness-dados">Full-thickness dados</option>
+                            <option value="step-dados">Step dados</option>
+                        </select>
+                    </label>
+                    {(renderBr.dados?.typeId==='full-thickness-dados' || renderBr.dados?.typeId==='step-dados') && (
                         <>
-                                <input className="input input-narrow" type="number" step="0.01" placeholder="Depth (in)" title="Dados depth (in)" value={renderBr.dados?.depthIn ?? 0.25}
+                            <label className="mr-2">Depth:
+                                <input className="input input-narrow ml-1" type="number" step="0.01" placeholder="Depth (in)" title="Dados depth (in)" value={renderBr.dados?.depthIn ?? 0.25}
                                 onChange={(e)=> setBuildResult(prev => ({
                                         ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
                                         dados: { ...(prev?.dados ?? { typeId: 'full-thickness-dados' }), depthIn: Number(e.target.value) }
                                 }))}
-                            />
-                                {renderBr.dados?.typeId==='step-dados' && (
-                                    <input className="input input-narrow" type="number" step="0.01" placeholder="Rebate (in)" title="Step rebate (in)" value={renderBr.dados?.stepRebateIn ?? 0.125}
+                                />
+                            </label>
+                            {renderBr.dados?.typeId==='step-dados' && (
+                                <label className="mr-2">Rebate:
+                                    <input className="input input-narrow ml-1" type="number" step="0.01" placeholder="Rebate (in)" title="Step rebate (in)" value={renderBr.dados?.stepRebateIn ?? 0.125}
                                     onChange={(e)=> setBuildResult(prev => ({
                                             ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
                                             dados: { ...(prev?.dados ?? { typeId: 'step-dados' }), stepRebateIn: Number(e.target.value) }
                                     }))}
-                                />
+                                    />
+                                </label>
                             )}
-                                <label className="ml-2">
-                                    <input type="checkbox" checked={!!renderBr.dados?.blind?.enabled} title="Blind enabled"
-                                    onChange={(e)=> setBuildResult(prev => {
-                                        const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
-                                        return {
-                                            ...base,
-                                            dados: {
-                                                ...(base.dados ?? { typeId: 'full-thickness-dados' }),
-                                                blind: { ...(base.dados?.blind ?? { enabled: false, frontsOnly: false }), enabled: e.target.checked, frontsOnly: base.dados?.blind?.frontsOnly ?? false }
-                                            }
-                                        };
-                                    })}
-                                /> Blind
+                            <label className="ml-2">Blind:
+                                <input type="checkbox" className="ml-1" checked={!!renderBr.dados?.blind?.enabled} title="Blind enabled"
+                                onChange={(e)=> setBuildResult(prev => {
+                                    const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
+                                    return {
+                                        ...base,
+                                        dados: {
+                                            ...(base.dados ?? { typeId: 'full-thickness-dados' }),
+                                            blind: { ...(base.dados?.blind ?? { enabled: false, frontsOnly: false }), enabled: e.target.checked, frontsOnly: base.dados?.blind?.frontsOnly ?? false }
+                                        }
+                                    };
+                                })}
+                                />
                             </label>
-                                {!!renderBr.dados?.blind?.enabled && (
+                            {!!renderBr.dados?.blind?.enabled && (
                                 <>
-                                        <input className="input input-narrow" type="number" step="0.01" placeholder="Blind offset (in)" title="Blind offset (in)" value={renderBr.dados?.blind?.offsetIn ?? 0.25}
+                                    <label className="mr-2">Blind offset:
+                                        <input className="input input-narrow ml-1" type="number" step="0.01" placeholder="Blind offset (in)" title="Blind offset (in)" value={renderBr.dados?.blind?.offsetIn ?? 0.25}
                                         onChange={(e)=> setBuildResult(prev => {
                                             const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
                                             return {
@@ -256,17 +268,18 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                                                 }
                                             };
                                         })}
-                                    />
-                                        <label className="ml-2">
-                                            <input type="checkbox" checked={!!renderBr.dados?.blind?.frontsOnly} title="Blind fronts only"
-                                            onChange={(e)=> setBuildResult(prev => {
-                                                const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
-                                                return {
-                                                    ...base,
-                                                    dados: { ...(base.dados ?? { typeId: 'full-thickness-dados' }), blind: { ...(base.dados?.blind ?? { enabled: true }), frontsOnly: e.target.checked, enabled: true } }
-                                                };
-                                            })}
-                                        /> Fronts only
+                                        />
+                                    </label>
+                                    <label className="ml-2">Fronts only:
+                                        <input type="checkbox" className="ml-1" checked={!!renderBr.dados?.blind?.frontsOnly} title="Blind fronts only"
+                                        onChange={(e)=> setBuildResult(prev => {
+                                            const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
+                                            return {
+                                                ...base,
+                                                dados: { ...(base.dados ?? { typeId: 'full-thickness-dados' }), blind: { ...(base.dados?.blind ?? { enabled: true }), frontsOnly: e.target.checked, enabled: true } }
+                                            };
+                                        })}
+                                        />
                                     </label>
                                 </>
                             )}
@@ -280,7 +293,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
         const t = renderBr.toeKick ?? { attached: null };
         statusItems.push(
             <div className="build-status-item" key="toe-kick">
-                <span className="label">Toe kick</span>
+                <span className="label">Toe kick attached</span>
                 <span>
                     <select className="input" value={t.attached==null ? '' : (t.attached ? 'yes' : 'no')} title="Toe kick attached"
                         onChange={(e)=> setBuildResult(prev => ({
@@ -327,6 +340,10 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                 </span>
             </div>
                 );
+        // Append Face Frame Positioning after toe kick (for face-frame)
+        if (cabinetStyle === 'face-frame') {
+            statusItems.push(...faceFrameContent);
+        }
         // Cabinet Materials summary (after build process controls)
         const caseMat = br?.materials?.case;
         const hardware = br?.materials?.hardware;
