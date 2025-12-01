@@ -855,7 +855,7 @@ body {
 
 .cabinet-selection-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.1fr;
   gap: var(--space-xl);
   height: 500px;
 }
@@ -1023,10 +1023,10 @@ body {
 /* Build status list */
 .build-status-list {
   /* Tighter but allow a bit more horizontal room to prevent clipping */
-  width: auto;
-  max-width: 480px; /* allow more width within the panel */
-  margin-left: auto;
-  margin-right: 30px; /* reclaimed from 50px */
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
   font-size: 13px;
 }
 .build-status-item {
@@ -1522,7 +1522,7 @@ body {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
   .cabinet-selection-grid {
     grid-template-columns: 1fr;
     gap: var(--space-lg);

@@ -470,7 +470,7 @@ export default function CreateCabinets() {
           <p className="page-subtitle">Create Assemblies for Cabinet Catalogue.</p>
         </div>
 
-        <div className="cabinet-selection-grid">
+        <div className="cabinet-selection-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.25fr' }}>
           {/* Left Panel - Selection Form */}
           <div className="selection-panel">
             <div className="selection-section">
@@ -672,7 +672,262 @@ export default function CreateCabinets() {
                 <div style={{ padding: 16, color: '#888' }}>Doors/Drawers tab content goes here.</div>
               )}
               {activeTab === 2 && cabinetStyle === 'face-frame' && (
-                <div style={{ padding: 16, color: '#888' }}>Face Frames tab content goes here.</div>
+                <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', padding: 16 }}>
+                  {/* Left: Face frame dimension controls */}
+                  <div style={{ flex: '1 1 55%' }}>
+                    <div style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-primary)', borderRadius: 8, padding: 12 }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8, color: 'var(--text-secondary)' }}>Face Frame Dimensions</div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                        <div>
+                          <label style={{ display: 'block', fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>Left Stile</label>
+                          <UnitInput
+                            className="input"
+                            units={units}
+                            valueInInches={ffDims.stileLeft}
+                            onChangeInches={(v) => setFfDims(prev => ({ ...prev, stileLeft: v ?? prev.stileLeft }))}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>Right Stile</label>
+                          <UnitInput
+                            className="input"
+                            units={units}
+                            valueInInches={ffDims.stileRight}
+                            onChangeInches={(v) => setFfDims(prev => ({ ...prev, stileRight: v ?? prev.stileRight }))}
+                          />
+                        </div>
+
+                        <div style={{ gridColumn: '1 / 3', marginTop: 6 }}>
+                          <label style={{ fontSize: 11, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Rails</label>
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>Top Rail</label>
+                          <UnitInput
+                            className="input"
+                            units={units}
+                            valueInInches={ffDims.railTop}
+                            onChangeInches={(v) => setFfDims(prev => ({ ...prev, railTop: v ?? prev.railTop }))}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>Bottom Rail</label>
+                          <UnitInput
+                            className="input"
+                            units={units}
+                            valueInInches={ffDims.railBottom}
+                            onChangeInches={(v) => setFfDims(prev => ({ ...prev, railBottom: v ?? prev.railBottom }))}
+                          />
+                        </div>
+
+                        {ffLayout.hasMidStile && (
+                          <div style={{ gridColumn: '1 / 3', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                              <label style={{ fontSize: 11, color: 'var(--text-muted)', display: 'block' }}>Mid Stile Width</label>
+                              <small style={{ color: 'var(--text-muted)' }}>x1</small>
+                            </div>
+                            <UnitInput
+                              className="input"
+                              units={units}
+                              valueInInches={ffDims.midStile}
+                              onChangeInches={(v) => setFfDims(prev => ({ ...prev, midStile: v ?? prev.midStile }))}
+                            />
+                          </div>
+                        )}
+
+                        {ffLayout.midRailsCount > 0 && (
+                          <div style={{ gridColumn: '1 / 3' }}>
+                            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+                              <label style={{ fontSize: 11, color: 'var(--text-muted)' }}>Mid Rail Width</label>
+                              <small style={{ color: 'var(--text-muted)' }}>x{ffLayout.midRailsCount}</small>
+                            </div>
+                            <UnitInput
+                              className="input"
+                              units={units}
+                              valueInInches={ffDims.midRail}
+                              onChangeInches={(v) => setFfDims(prev => ({ ...prev, midRail: v ?? prev.midRail }))}
+                            />
+                          </div>
+                        )}
+
+                        <div style={{ gridColumn: '1 / 3', marginTop: 6 }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                            <label style={{ display: 'block', fontSize: 11, color: 'var(--text-muted)' }}>Frame Thickness</label>
+                            <UnitInput
+                              className="input"
+                              units={units}
+                              valueInInches={ffDims.thickness}
+                              onChangeInches={(v) => setFfDims(prev => ({ ...prev, thickness: v ?? prev.thickness }))}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop: 12, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                      <div>
+                        <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>Fronts: Mode</label>
+                        <select
+                          className="input"
+                          value={frontDefaults.openingMode}
+                          onChange={(e) => setFrontDefaults(prev => ({ ...prev, openingMode: e.target.value as 'overlay'|'inset' }))}
+                        >
+                          <option value="overlay">Overlay</option>
+                          <option value="inset">Inset</option>
+                        </select>
+                      </div>
+                      <div />
+                      {frontDefaults.openingMode === 'overlay' && (
+                        <>
+                          <div>
+                            <label style={{ display: 'block', fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>Door Overlay (H)</label>
+                            <UnitInput
+                              className="input"
+                              units={units}
+                              valueInInches={frontDefaults.doorOverlay}
+                              onChangeInches={(v)=> setFrontDefaults(prev => ({ ...prev, doorOverlay: v ?? prev.doorOverlay }))}
+                            />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>Drawer Overlay (H)</label>
+                            <UnitInput
+                              className="input"
+                              units={units}
+                              valueInInches={frontDefaults.drawerOverlay}
+                              onChangeInches={(v)=> setFrontDefaults(prev => ({ ...prev, drawerOverlay: v ?? prev.drawerOverlay }))}
+                            />
+                          </div>
+                        </>
+                      )}
+                      {frontDefaults.openingMode === 'inset' && (
+                        <>
+                          <div>
+                            <label style={{ display: 'block', fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>Door Reveal (gap)</label>
+                            <UnitInput
+                              className="input"
+                              units={units}
+                              valueInInches={frontDefaults.doorReveal}
+                              onChangeInches={(v)=> setFrontDefaults(prev => ({ ...prev, doorReveal: v ?? prev.doorReveal }))}
+                            />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>Drawer Reveal (gap)</label>
+                            <UnitInput
+                              className="input"
+                              units={units}
+                              valueInInches={frontDefaults.drawerReveal}
+                              onChangeInches={(v)=> setFrontDefaults(prev => ({ ...prev, drawerReveal: v ?? prev.drawerReveal }))}
+                            />
+                          </div>
+                        </>
+                      )}
+                      {(() => { const fname = (appearanceType.split('/')?.pop() || '').toLowerCase(); const hasDrawers = fname.includes('drawer'); return hasDrawers; })() && (
+                        <div style={{ gridColumn: '1 / 3' }}>
+                          <label style={{ display: 'block', fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>Drawer Opening Height</label>
+                          <UnitInput
+                            className="input"
+                            units={units}
+                            valueInInches={frontDefaults.drawerOpenH ?? (frontPreview ? frontPreview.rowOpenHDrawer : undefined)}
+                            onChangeInches={(v)=> setFrontDefaults(prev => ({ ...prev, drawerOpenH: v ?? null }))}
+                          />
+                          <small style={{ color: 'var(--text-muted)', display: 'block', marginTop: 4 }}>Applies to drawer rows only; remaining opening height is split across door rows.</small>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right: Preview */}
+                  <div style={{ flex: '1 1 45%', textAlign: 'left' }}>
+                    {frontPreview ? (
+                      <div style={{ padding: 8, border: '1px solid var(--border-secondary)', borderRadius: 6, background: 'var(--bg-elevated)' }}>
+                        <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6 }}>Preview</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, fontSize: 12 }}>
+                          <div>
+                            <div style={{ color: 'var(--text-muted)' }}>Opening Width</div>
+                            <div>{units === 'in' ? `${toFraction(frontPreview.innerW)}"` : `${formatMm0_5(inToMm(frontPreview.innerW))} mm`}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: 'var(--text-muted)' }}>Opening Height</div>
+                            <div>{units === 'in' ? `${toFraction(frontPreview.innerH)}"` : `${formatMm0_5(inToMm(frontPreview.innerH))} mm`}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: 'var(--text-muted)' }}>Drawer Rows</div>
+                            <div>{frontPreview.drawerRows ?? 0}{(frontPreview.drawerRows ?? 0) > 0 ? ` × ${units === 'in' ? `${toFraction(frontPreview.rowOpenHDrawer)}"` : `${formatMm0_5(inToMm(frontPreview.rowOpenHDrawer))} mm`} open` : ''}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: 'var(--text-muted)' }}>Door Rows</div>
+                            <div>{frontPreview.doorRows ?? (frontPreview.rows)}{(frontPreview.doorRows ?? 0) > 0 ? ` × ${units === 'in' ? `${toFraction(frontPreview.rowOpenHDoor)}"` : `${formatMm0_5(inToMm(frontPreview.rowOpenHDoor))} mm`} open` : ''}</div>
+                          </div>
+                          {frontPreview.hasCenter ? (
+                            <div>
+                              <div style={{ color: 'var(--text-muted)' }}>Door Leaf Width</div>
+                              <div>{units === 'in' ? `${toFraction(frontPreview.doorWLeaf)}"` : `${formatMm0_5(inToMm(frontPreview.doorWLeaf))} mm`}</div>
+                            </div>
+                          ) : (
+                            <div>
+                              <div style={{ color: 'var(--text-muted)' }}>Door Width</div>
+                              <div>{units === 'in' ? `${toFraction(frontPreview.doorWSingle)}"` : `${formatMm0_5(inToMm(frontPreview.doorWSingle))} mm`}</div>
+                            </div>
+                          )}
+                          <div>
+                            <div style={{ color: 'var(--text-muted)' }}>Door Height (per row)</div>
+                            <div>{units === 'in' ? `${toFraction(frontPreview.doorH)}"` : `${formatMm0_5(inToMm(frontPreview.doorH))} mm`}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: 'var(--text-muted)' }}>Drawer Width</div>
+                            <div>{units === 'in' ? `${toFraction(frontPreview.drawerWSingle)}"` : `${formatMm0_5(inToMm(frontPreview.drawerWSingle))} mm`}</div>
+                          </div>
+                          <div>
+                            <div style={{ color: 'var(--text-muted)' }}>Drawer Height (per row)</div>
+                            <div>{units === 'in' ? `${toFraction(frontPreview.drawerH)}"` : `${formatMm0_5(inToMm(frontPreview.drawerH))} mm`}</div>
+                          </div>
+                        </div>
+                        <div style={{ marginTop: 10 }}>
+                          <div style={{ color: 'var(--text-muted)', fontSize: 12, marginBottom: 6 }}>Diagram</div>
+                          <div style={{
+                            border: '1px solid var(--border-secondary)',
+                            borderRadius: 6,
+                            background: 'var(--bg-primary)',
+                            height: 160,
+                            width: '100%',
+                            overflow: 'hidden',
+                            display: 'flex',
+                            flexDirection: 'column'
+                          }}>
+                            {Array.from({ length: frontPreview.drawerRows || 0 }).map((_, i) => (
+                              <div key={`diag-drawer-${i}`} style={{
+                                flex: `${(frontPreview.rowOpenHDrawer || 0) / (frontPreview.innerH || 1)}`,
+                                background: 'rgba(0, 170, 255, 0.15)',
+                                borderBottom: '1px solid var(--border-secondary)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: 11, color: 'var(--text-secondary)'
+                              }}>
+                                Drawer {units === 'in' ? `${toFraction(frontPreview.rowOpenHDrawer)}"` : `${formatMm0_5(inToMm(frontPreview.rowOpenHDrawer))} mm`}
+                              </div>
+                            ))}
+                            {Array.from({ length: frontPreview.doorRows || 0 }).map((_, i) => (
+                              <div key={`diag-door-${i}`} style={{
+                                flex: `${(frontPreview.rowOpenHDoor || 0) / (frontPreview.innerH || 1)}`,
+                                background: 'rgba(0, 200, 0, 0.12)',
+                                borderBottom: i === (frontPreview.doorRows || 0) - 1 ? 'none' : '1px solid var(--border-secondary)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: 11, color: 'var(--text-secondary)'
+                              }}>
+                                Door {units === 'in' ? `${toFraction(frontPreview.rowOpenHDoor)}"` : `${formatMm0_5(inToMm(frontPreview.rowOpenHDoor))} mm`}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <small style={{ color: 'var(--text-muted)', display: 'block', marginTop: 6 }}>
+                          Drawer opening height is applied when drawers are present; remaining opening height is distributed across door rows.
+                        </small>
+                      </div>
+                    ) : (
+                      <div style={{ border: '1px dashed var(--border-primary)', borderRadius: 8, padding: 32, color: 'var(--text-muted)', fontSize: 12 }}>
+                        Select an appearance on Defaults modal to see preview.
+                      </div>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           </div>

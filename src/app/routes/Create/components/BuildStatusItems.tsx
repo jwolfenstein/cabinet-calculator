@@ -65,109 +65,6 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
     // Omit cabinet style and dimensions on Cabinet Defaults tab
     // Build Process Defaults (editable controls)
 
-        // Prepare Face Frame Positioning content to render after toe kick (face-frame only)
-        let faceFrameContent: JSX.Element[] = [];
-        if (cabinetStyle === 'face-frame') {
-            const ff = renderBr.faceFramePositioning ?? { leftStile: { mode: 'flush-exterior' as any }, rightStile: { mode: 'flush-exterior' as any }, bottomRail: { mode: 'flush-top' as any, offsetIn: 0.25 } };
-            faceFrameContent.push(
-                <div className="build-status-item" key="ff-left">
-                    <span className="label">Left stile</span>
-                    <span>
-                        <select className="input" value={ff.leftStile.mode} title="Left stile mode"
-                            onChange={(e)=> setBuildResult(prev => ({
-                                    ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
-                                faceFramePositioning: {
-                                        ...(prev?.faceFramePositioning ?? ff),
-                                    leftStile: { mode: e.target.value as any, offsetIn: e.target.value==='offset' ? (prev?.faceFramePositioning?.leftStile.offsetIn ?? 0.75) : undefined }
-                                }
-                            }))}
-                        >
-                            <option value="flush-exterior">flush exterior</option>
-                            <option value="flush-interior">flush interior</option>
-                            <option value="offset">offset</option>
-                        </select>
-                            {( ff.leftStile.mode==='offset') && (
-                            <input className="input input-narrow" type="number" step="0.01" title="Left stile offset (in)" value={renderBr.faceFramePositioning?.leftStile.offsetIn ?? 0.75}
-                                onChange={(e)=> setBuildResult(prev => ({
-                                        ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
-                                    faceFramePositioning: {
-                                            ...(prev?.faceFramePositioning ?? ff),
-                                        leftStile: { ...(prev?.faceFramePositioning?.leftStile ?? { mode: 'offset' }), offsetIn: Number(e.target.value) }
-                                    }
-                                }))}
-                            />
-                        )}
-                    </span>
-                </div>
-            );
-            faceFrameContent.push(
-                <div className="build-status-item" key="ff-right">
-                    <span className="label">Right stile</span>
-                    <span>
-                        <select className="input" value={ff.rightStile.mode} title="Right stile mode"
-                            onChange={(e)=> setBuildResult(prev => ({
-                                    ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
-                                faceFramePositioning: {
-                                    ...(prev?.faceFramePositioning ?? ff),
-                                    rightStile: { mode: e.target.value as any, offsetIn: e.target.value==='offset' ? (prev?.faceFramePositioning?.rightStile.offsetIn ?? 0.75) : undefined }
-                                }
-                            }))}
-                        >
-                            <option value="flush-exterior">flush exterior</option>
-                            <option value="flush-interior">flush interior</option>
-                            <option value="offset">offset</option>
-                        </select>
-                            {( ff.rightStile.mode==='offset') && (
-                            <input className="input input-narrow" type="number" step="0.01" title="Right stile offset (in)" value={renderBr.faceFramePositioning?.rightStile.offsetIn ?? 0.75}
-                                onChange={(e)=> setBuildResult(prev => ({
-                                        ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
-                                    faceFramePositioning: {
-                                            ...(prev?.faceFramePositioning ?? ff),
-                                        rightStile: { ...(prev?.faceFramePositioning?.rightStile ?? { mode: 'offset' }), offsetIn: Number(e.target.value) }
-                                    }
-                                }))}
-                            />
-                        )}
-                    </span>
-                </div>
-            );
-            faceFrameContent.push(
-                <div className="build-status-item" key="ff-bottom">
-                    <span className="label">Bottom rail</span>
-                    <span>
-                        <select className="input" value={ff.bottomRail.mode} title="Bottom rail mode"
-                            onChange={(e)=> setBuildResult(prev => ({
-                                    ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
-                                faceFramePositioning: {
-                                    ...(prev?.faceFramePositioning ?? ff),
-                                    bottomRail: { mode: e.target.value as any, offsetIn: e.target.value==='offset' ? (prev?.faceFramePositioning?.bottomRail.offsetIn ?? 0.25) : undefined }
-                                }
-                            }))}
-                        >
-                            <option value="flush-top">flush top</option>
-                            <option value="flush-bottom">flush bottom</option>
-                            <option value="offset">offset</option>
-                        </select>
-                            {( ff.bottomRail.mode==='offset') && (
-                            <input className="input input-narrow" type="number" step="0.01" title="Bottom rail offset (in)" value={renderBr.faceFramePositioning?.bottomRail.offsetIn ?? 0.25}
-                                onChange={(e)=> setBuildResult(prev => {
-                                        const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult;
-                                        const ffBase = base.faceFramePositioning ?? ff;
-                                        return {
-                                            ...base,
-                                            faceFramePositioning: {
-                                                leftStile: ffBase.leftStile,
-                                                rightStile: ffBase.rightStile,
-                                                bottomRail: { ...(ffBase.bottomRail ?? { mode: 'offset' as any }), offsetIn: Number(e.target.value) }
-                                            }
-                                        };
-                                    })}
-                            />
-                        )}
-                    </span>
-                </div>
-            );
-        }
 
         // Back Construction
         statusItems.push(
@@ -340,10 +237,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                 </span>
             </div>
                 );
-        // Append Face Frame Positioning after toe kick (for face-frame)
-        if (cabinetStyle === 'face-frame') {
-            statusItems.push(...faceFrameContent);
-        }
+        // Face frame details are now rendered in the dedicated Face Frame tab (not here)
         // Cabinet Materials summary (after build process controls)
         const caseMat = br?.materials?.case;
         const hardware = br?.materials?.hardware;
@@ -377,8 +271,13 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
             </div>
         );
     return (
-        <div>
-            {statusItems}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+            <div>
+                {statusItems.slice(0, 3)}
+            </div>
+            <div>
+                {statusItems.slice(3)}
+            </div>
         </div>
     );
 }
