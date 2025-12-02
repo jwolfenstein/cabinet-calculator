@@ -105,7 +105,8 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
             <div className="build-status-item stacked" key="dados">
                 <div className="label">Dados</div>
                 <div className="content-block">
-                    <label className="mr-2">Type:
+                    <div className="inline-row">
+                        <label className="inline-label">Type</label>
                         <select className="input compact inline-control ml-1" value={d.typeId} title="Dados type"
                             onChange={(e)=> setBuildResult(prev => ({
                                     ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
@@ -116,26 +117,28 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                             <option value="full-thickness-dados">Full-thickness dados</option>
                             <option value="step-dados">Step dados</option>
                         </select>
-                    </label>
+                    </div>
                     {(renderBr.dados?.typeId==='full-thickness-dados' || renderBr.dados?.typeId==='step-dados') && (
                         <>
-                            <label className="mr-2">Depth:
+                            <div className="inline-row">
+                                <label className="inline-label">Depth</label>
                                 <input className="input input-narrow compact inline-control ml-1" type="number" step="0.01" placeholder="Depth (in)" title="Dados depth (in)" value={renderBr.dados?.depthIn ?? 0.25}
                                 onChange={(e)=> setBuildResult(prev => ({
                                         ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
                                         dados: { ...(prev?.dados ?? { typeId: 'full-thickness-dados' }), depthIn: Number(e.target.value) }
                                 }))}
                                 />
-                            </label>
+                            </div>
                             {renderBr.dados?.typeId==='step-dados' && (
-                                <label className="mr-2">Rebate:
+                                <div className="inline-row">
+                                    <label className="inline-label">Rebate</label>
                                     <input className="input input-narrow compact inline-control ml-1" type="number" step="0.01" placeholder="Rebate (in)" title="Step rebate (in)" value={renderBr.dados?.stepRebateIn ?? 0.125}
                                     onChange={(e)=> setBuildResult(prev => ({
                                             ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
                                             dados: { ...(prev?.dados ?? { typeId: 'step-dados' }), stepRebateIn: Number(e.target.value) }
                                     }))}
                                     />
-                                </label>
+                                </div>
                             )}
                             <div className="content-block inline-row">
                                 <label className="ml-2 inline-label">Blind
