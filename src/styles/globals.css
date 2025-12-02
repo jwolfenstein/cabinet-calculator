@@ -1062,6 +1062,10 @@ body {
 .build-status-item .content-block {
   display: block;
 }
+/* Add definition between controls stacked vertically in right pane */
+.build-status-item.stacked .content-block > * + * {
+  margin-top: 6px;
+}
 
 /* Inline rows for labels + inputs on same line */
 .inline-row {
@@ -1076,6 +1080,12 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+/* Ensure small separation between label and control */
+.inline-row .inline-label + .inline-control,
+.inline-row .inline-label + .input,
+.inline-row .inline-label + .select {
+  margin-left: 6px;
 }
 
 /* Two-column grid wrapper for BuildStatusItems split */
