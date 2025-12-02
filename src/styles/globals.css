@@ -859,6 +859,9 @@ body {
   gap: var(--space-xl);
   height: 500px;
 }
+.cabinet-selection-grid.wide-right {
+  grid-template-columns: 1fr 1.25fr;
+}
 
 /* Left Panel - Selection Form */
 .selection-panel {
@@ -1048,6 +1051,9 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+.inline-row + .inline-row {
+  margin-top: 6px;
 }
 .inline-row .inline-label {
   display: flex;

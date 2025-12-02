@@ -470,7 +470,7 @@ export default function CreateCabinets() {
           <p className="page-subtitle">Create Assemblies for Cabinet Catalogue.</p>
         </div>
 
-        <div className="cabinet-selection-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.25fr' }}>
+        <div className="cabinet-selection-grid wide-right">
           {/* Left Panel - Selection Form */}
           <div className="selection-panel">
             <div className="selection-section">

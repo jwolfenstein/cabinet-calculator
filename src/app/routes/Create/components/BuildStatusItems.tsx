@@ -221,7 +221,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                                                                         }))}
                                                                     />
                                                                 </div>
-                                                                <div className="inline-row" style={{ marginTop: 6 }}>
+                                                                <div className="inline-row">
                                                                     <span className="inline-label">Depth</span>
                                                                     <input
                                                                         className="input input-narrow ml-1"
