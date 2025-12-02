@@ -71,7 +71,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
             <div className="build-status-item stacked" key="back-construction">
                 <div className="label">Back construction</div>
                 <div className="content-block">
-                    <select className="input" value={renderBr.backConstruction?.id ?? ''} title="Back construction"
+                    <select className="input compact" value={renderBr.backConstruction?.id ?? ''} title="Back construction"
                         onChange={(e)=> setBuildResult(prev => ({
                             ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
                             backConstruction: {
@@ -88,7 +88,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                         <option value="inset-nailer-dado-back">Inset nailer dado back</option>
                     </select>
                     {(renderBr.backConstruction?.id==='dado-thick-back' || renderBr.backConstruction?.id==='inset-nailer-dado-back') && (
-                        <input className="input input-narrow" type="number" step="0.01" title="Back dado depth (in)" value={renderBr.backConstruction?.dadoDepthIn ?? 0.25}
+                        <input className="input input-narrow compact" type="number" step="0.01" title="Back dado depth (in)" value={renderBr.backConstruction?.dadoDepthIn ?? 0.25}
                             onChange={(e)=> setBuildResult(prev => ({
                                 ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
                                 backConstruction: { ...(prev?.backConstruction ?? { id: 'dado-thick-back', name: 'Dado thick back' }), dadoDepthIn: Number(e.target.value) }
@@ -106,7 +106,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                 <div className="label">Dados</div>
                 <div className="content-block">
                     <label className="mr-2">Type:
-                        <select className="input ml-1" value={d.typeId} title="Dados type"
+                        <select className="input compact ml-1" value={d.typeId} title="Dados type"
                             onChange={(e)=> setBuildResult(prev => ({
                                     ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
                                 dados: { ...(prev?.dados ?? {}), typeId: e.target.value as any }
@@ -120,7 +120,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                     {(renderBr.dados?.typeId==='full-thickness-dados' || renderBr.dados?.typeId==='step-dados') && (
                         <>
                             <label className="mr-2">Depth:
-                                <input className="input input-narrow ml-1" type="number" step="0.01" placeholder="Depth (in)" title="Dados depth (in)" value={renderBr.dados?.depthIn ?? 0.25}
+                                <input className="input input-narrow compact ml-1" type="number" step="0.01" placeholder="Depth (in)" title="Dados depth (in)" value={renderBr.dados?.depthIn ?? 0.25}
                                 onChange={(e)=> setBuildResult(prev => ({
                                         ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
                                         dados: { ...(prev?.dados ?? { typeId: 'full-thickness-dados' }), depthIn: Number(e.target.value) }
@@ -129,7 +129,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                             </label>
                             {renderBr.dados?.typeId==='step-dados' && (
                                 <label className="mr-2">Rebate:
-                                    <input className="input input-narrow ml-1" type="number" step="0.01" placeholder="Rebate (in)" title="Step rebate (in)" value={renderBr.dados?.stepRebateIn ?? 0.125}
+                                    <input className="input input-narrow compact ml-1" type="number" step="0.01" placeholder="Rebate (in)" title="Step rebate (in)" value={renderBr.dados?.stepRebateIn ?? 0.125}
                                     onChange={(e)=> setBuildResult(prev => ({
                                             ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
                                             dados: { ...(prev?.dados ?? { typeId: 'step-dados' }), stepRebateIn: Number(e.target.value) }
@@ -156,7 +156,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                             {!!renderBr.dados?.blind?.enabled && (
                                 <>
                                     <label className="mr-2 inline-label">Blind offset
-                                        <input className="input input-narrow ml-1" type="number" step="0.01" placeholder="Blind offset (in)" title="Blind offset (in)" value={renderBr.dados?.blind?.offsetIn ?? 0.25}
+                                        <input className="input input-narrow compact ml-1" type="number" step="0.01" placeholder="Blind offset (in)" title="Blind offset (in)" value={renderBr.dados?.blind?.offsetIn ?? 0.25}
                                         onChange={(e)=> setBuildResult(prev => {
                                             const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
                                             return {
@@ -194,7 +194,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
             <div className="build-status-item stacked" key="toe-kick">
                 <div className="label">Toe kick attached</div>
                 <div className="content-block">
-                    <select className="input" value={t.attached==null ? '' : (t.attached ? 'yes' : 'no')} title="Toe kick attached"
+                    <select className="input compact" value={t.attached==null ? '' : (t.attached ? 'yes' : 'no')} title="Toe kick attached"
                         onChange={(e)=> setBuildResult(prev => ({
                                 ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
                             toeKick: { ...(prev?.toeKick ?? {}), attached: e.target.value==='' ? null : (e.target.value==='yes') }
@@ -209,7 +209,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                                                                 <div className="inline-row">
                                                                     <span className="inline-label">Height</span>
                                                                     <input
-                                                                        className="input input-narrow ml-1"
+                                                                        className="input input-narrow compact ml-1"
                                                                         type="number"
                                                                         step="0.01"
                                                                         placeholder="Height (in)"
@@ -224,7 +224,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                                                                 <div className="inline-row">
                                                                     <span className="inline-label">Depth</span>
                                                                     <input
-                                                                        className="input input-narrow ml-1"
+                                                                        className="input input-narrow compact ml-1"
                                                                         type="number"
                                                                         step="0.01"
                                                                         placeholder="Depth (in)"

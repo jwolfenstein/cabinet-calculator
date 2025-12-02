@@ -186,8 +186,8 @@ body {
 }
 
 .input {
-  height: 32px;
-  padding: 0 var(--space-sm);
+  height: 30px;
+  padding: 0 6px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-primary);
   background: var(--bg-quaternary);
@@ -202,13 +202,21 @@ body {
 }
 
 .select {
-  height: 32px;
-  padding: 0 var(--space-sm);
+  height: 30px;
+  padding: 0 6px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-primary);
   background: var(--bg-quaternary);
   color: var(--text-primary);
   font-size: 14px;
+}
+
+/* Compact variants for dense control rows */
+.input.compact,
+.select.compact {
+  height: 28px;
+  padding: 0 4px;
+  font-size: 13px;
 }
 
 .panel {
