@@ -68,16 +68,16 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
 
         // Back Construction
         statusItems.push(
-            <div className="build-status-item" key="back-construction">
-                <span className="label">Back construction</span>
-                <span>
-                        <select className="input" value={renderBr.backConstruction?.id ?? ''} title="Back construction"
+            <div className="build-status-item stacked" key="back-construction">
+                <div className="label">Back construction</div>
+                <div className="content-block">
+                    <select className="input" value={renderBr.backConstruction?.id ?? ''} title="Back construction"
                         onChange={(e)=> setBuildResult(prev => ({
-                                ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                            ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
                             backConstruction: {
                                 id: e.target.value,
                                 name: e.target.value,
-                                    dadoDepthIn: (e.target.value==='dado-thick-back' || e.target.value==='inset-nailer-dado-back') ? (prev?.backConstruction?.dadoDepthIn ?? 0.25) : undefined
+                                dadoDepthIn: (e.target.value==='dado-thick-back' || e.target.value==='inset-nailer-dado-back') ? (prev?.backConstruction?.dadoDepthIn ?? 0.25) : undefined
                             }
                         }))}
                     >
@@ -87,24 +87,24 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                         <option value="dado-thick-back">Dado thick back</option>
                         <option value="inset-nailer-dado-back">Inset nailer dado back</option>
                     </select>
-                            {(renderBr.backConstruction?.id==='dado-thick-back' || renderBr.backConstruction?.id==='inset-nailer-dado-back') && (
-                                <input className="input input-narrow" type="number" step="0.01" title="Back dado depth (in)" value={renderBr.backConstruction?.dadoDepthIn ?? 0.25}
+                    {(renderBr.backConstruction?.id==='dado-thick-back' || renderBr.backConstruction?.id==='inset-nailer-dado-back') && (
+                        <input className="input input-narrow" type="number" step="0.01" title="Back dado depth (in)" value={renderBr.backConstruction?.dadoDepthIn ?? 0.25}
                             onChange={(e)=> setBuildResult(prev => ({
-                                    ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
-                                    backConstruction: { ...(prev?.backConstruction ?? { id: 'dado-thick-back', name: 'Dado thick back' }), dadoDepthIn: Number(e.target.value) }
+                                ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                backConstruction: { ...(prev?.backConstruction ?? { id: 'dado-thick-back', name: 'Dado thick back' }), dadoDepthIn: Number(e.target.value) }
                             }))}
                         />
                     )}
-                </span>
+                </div>
             </div>
-            );
+        );
 
         // Dados
         const d = renderBr.dados ?? { typeId: 'no-dados' as const };
         statusItems.push(
-            <div className="build-status-item" key="dados">
-                <span className="label">Dados</span>
-                <span>
+            <div className="build-status-item stacked" key="dados">
+                <div className="label">Dados</div>
+                <div className="content-block">
                     <label className="mr-2">Type:
                         <select className="input ml-1" value={d.typeId} title="Dados type"
                             onChange={(e)=> setBuildResult(prev => ({
@@ -137,8 +137,9 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                                     />
                                 </label>
                             )}
-                            <label className="ml-2">Blind:
-                                <input type="checkbox" className="ml-1" checked={!!renderBr.dados?.blind?.enabled} title="Blind enabled"
+                            <div className="content-block inline-row">
+                                <label className="ml-2 inline-label">Blind
+                                    <input type="checkbox" className="ml-1" checked={!!renderBr.dados?.blind?.enabled} title="Blind enabled"
                                 onChange={(e)=> setBuildResult(prev => {
                                     const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
                                     return {
@@ -150,10 +151,11 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                                     };
                                 })}
                                 />
-                            </label>
+                                </label>
+                            </div>
                             {!!renderBr.dados?.blind?.enabled && (
                                 <>
-                                    <label className="mr-2">Blind offset:
+                                    <label className="mr-2 inline-label">Blind offset
                                         <input className="input input-narrow ml-1" type="number" step="0.01" placeholder="Blind offset (in)" title="Blind offset (in)" value={renderBr.dados?.blind?.offsetIn ?? 0.25}
                                         onChange={(e)=> setBuildResult(prev => {
                                             const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
@@ -167,7 +169,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                                         })}
                                         />
                                     </label>
-                                    <label className="ml-2">Fronts only:
+                                    <label className="ml-2 inline-label">Fronts only
                                         <input type="checkbox" className="ml-1" checked={!!renderBr.dados?.blind?.frontsOnly} title="Blind fronts only"
                                         onChange={(e)=> setBuildResult(prev => {
                                             const base = prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, faceFramePositioning: renderBr.faceFramePositioning, backConstruction: renderBr.backConstruction, dados: { typeId: renderBr.dados?.typeId ?? 'full-thickness-dados' }, toeKick: renderBr.toeKick } as BuildResult;
@@ -182,16 +184,16 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                             )}
                         </>
                     )}
-                </span>
+                </div>
             </div>
             );
 
         // Toe Kick
         const t = renderBr.toeKick ?? { attached: null };
         statusItems.push(
-            <div className="build-status-item" key="toe-kick">
-                <span className="label">Toe kick attached</span>
-                <span>
+            <div className="build-status-item stacked" key="toe-kick">
+                <div className="label">Toe kick attached</div>
+                <div className="content-block">
                     <select className="input" value={t.attached==null ? '' : (t.attached ? 'yes' : 'no')} title="Toe kick attached"
                         onChange={(e)=> setBuildResult(prev => ({
                                 ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
@@ -204,18 +206,36 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                     </select>
                         {(renderBr.toeKick?.attached!=null) && (
                         <>
-                                <input className="input input-narrow" type="number" step="0.01" placeholder="Height (in)" title="Toe kick height (in)" value={renderBr.toeKick?.heightIn ?? 3.5}
-                                onChange={(e)=> setBuildResult(prev => ({
-                                        ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
-                                        toeKick: { ...(prev?.toeKick ?? { attached: true }), heightIn: Number(e.target.value) }
-                                }))}
-                            />
-                                <input className="input input-narrow" type="number" step="0.01" placeholder="Depth (in)" title="Toe kick depth (in)" value={renderBr.toeKick?.depthIn ?? 3}
-                                onChange={(e)=> setBuildResult(prev => ({
-                                        ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
-                                        toeKick: { ...(prev?.toeKick ?? { attached: true }), depthIn: Number(e.target.value) }
-                                }))}
-                            />
+                                                                <div className="inline-row">
+                                                                    <span className="inline-label">Height</span>
+                                                                    <input
+                                                                        className="input input-narrow ml-1"
+                                                                        type="number"
+                                                                        step="0.01"
+                                                                        placeholder="Height (in)"
+                                                                        title="Toe kick height (in)"
+                                                                        value={renderBr.toeKick?.heightIn ?? 3.5}
+                                                                        onChange={(e)=> setBuildResult(prev => ({
+                                                                            ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                                                            toeKick: { ...(prev?.toeKick ?? { attached: true }), heightIn: Number(e.target.value) }
+                                                                        }))}
+                                                                    />
+                                                                </div>
+                                                                <div className="inline-row" style={{ marginTop: 6 }}>
+                                                                    <span className="inline-label">Depth</span>
+                                                                    <input
+                                                                        className="input input-narrow ml-1"
+                                                                        type="number"
+                                                                        step="0.01"
+                                                                        placeholder="Depth (in)"
+                                                                        title="Toe kick depth (in)"
+                                                                        value={renderBr.toeKick?.depthIn ?? 3}
+                                                                        onChange={(e)=> setBuildResult(prev => ({
+                                                                            ...(prev ?? { units: 'in', materials: { case: {} as any, hardware: {} as any }, toeKick: { attached: null } } as BuildResult),
+                                                                            toeKick: { ...(prev?.toeKick ?? { attached: true }), depthIn: Number(e.target.value) }
+                                                                        }))}
+                                                                    />
+                                                                </div>
                                 {(renderBr.toeKick?.attached===false) && (
                                 <>
                                         <input className="input input-narrow" type="number" step="0.01" placeholder="Left setback (in)" title="Left setback (in)" value={renderBr.toeKick?.leftSetbackIn ?? 0}
@@ -234,7 +254,7 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                             )}
                         </>
                     )}
-                </span>
+                </div>
             </div>
                 );
         // Face frame details are now rendered in the dedicated Face Frame tab (not here)
@@ -242,9 +262,9 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
         const caseMat = br?.materials?.case;
         const hardware = br?.materials?.hardware;
         statusItems.push(
-            <div className="build-status-item" key="cabinet-materials">
-                <span className="label">Cabinet materials</span>
-                <span>
+            <div className="build-status-item stacked" key="cabinet-materials">
+                <div className="label">Cabinet materials</div>
+                <div className="content-block">
                     {caseMat ? (
                         <>
                             {caseMat.ends ? `Ends: ${caseMat.ends}` : ''}
@@ -253,13 +273,13 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                             {caseMat.backs ? ` • Backs: ${caseMat.backs}` : ''}
                         </>
                     ) : '—'}
-                </span>
+                </div>
             </div>
         );
         statusItems.push(
-            <div className="build-status-item" key="hardware-defaults">
-                <span className="label">Hardware defaults</span>
-                <span>
+            <div className="build-status-item stacked" key="hardware-defaults">
+                <div className="label">Hardware defaults</div>
+                <div className="content-block">
                     {hardware ? (
                         <>
                             {hardware.hinges ? `Hinges: ${hardware.hinges}` : ''}
@@ -267,11 +287,11 @@ export function BuildStatusItems({ cabinetStyle, buildResult: br, getCurrentSpec
                             {hardware.drawerGuides ? ` • Guides: ${hardware.drawerGuides}` : ''}
                         </>
                     ) : '—'}
-                </span>
+                </div>
             </div>
         );
     return (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div className="build-status-grid">
             <div>
                 {statusItems.slice(0, 3)}
             </div>

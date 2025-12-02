@@ -1029,6 +1029,38 @@ body {
   margin-right: 0;
   font-size: 13px;
 }
+
+/* Build status item stacked layout to place controls under labels */
+.build-status-item.stacked {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 8px;
+}
+.build-status-item.stacked .label {
+  display: block;
+}
+.build-status-item .content-block {
+  display: block;
+}
+
+/* Inline rows for labels + inputs on same line */
+.inline-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.inline-row .inline-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Two-column grid wrapper for BuildStatusItems split */
+.build-status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
 .build-status-item {
   display: flex;
   align-items: flex-start;
