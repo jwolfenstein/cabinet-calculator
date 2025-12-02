@@ -219,6 +219,14 @@ body {
   font-size: 13px;
 }
 
+/* Inline-control: extra compact for inline rows to reduce visible background */
+.inline-control {
+  height: 26px !important;
+  padding: 0 4px !important;
+  border-radius: 4px !important;
+  border-width: 1px !important;
+}
+
 .panel {
   background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
